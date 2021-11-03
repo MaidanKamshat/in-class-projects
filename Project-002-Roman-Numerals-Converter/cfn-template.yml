@@ -42,9 +42,9 @@ Resources:
           wget $FOLDER/templates/index.html
           wget $FOLDER/templates/result.html
           wget $FOLDER/app.py
+          python3 app.py
 
-          systemctl start httpd
-          systemctl enable httpd
+          
 
 Outputs:
   WebsiteURL:
