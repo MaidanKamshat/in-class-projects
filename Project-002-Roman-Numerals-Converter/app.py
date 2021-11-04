@@ -2,37 +2,29 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
+def convert(decimal_num):
+    roman = {1000:'M', 900:'CM', 500:'D', 400:'CD', 100:'C', 90:'XC', 50:'L', 40:'XL', 10:'X', 9:'IX', 5:'V', 4:'IV', 1:'I'}
+    num_to_roman = ''
 
-number_dict = {1 : 'I', 4: 'IV', 5: 'V', 9: 'IX', 10: 'X', 40: 'XL', 50: 'L',90: 'XC', 100: 'C', 400:'CD',  500: 'D', 900: 'CM', 1000: 'M'}
-order = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
-result = []
-
-def input(number):
-  result1 =""
-  for x in order:
-    if number !=0:
-        quotient = number//x
-        if quotient !=0:
-            for y in range(quotient):
-                result1 = result1 + (number_dict[x])
-        number = number%x
-  return result1
+    for i in roman.keys():
+        num_to_roman += roman[i]*(decimal_num//i) 
+        decimal_num %= i
+    return num_to_roman
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-@app.route("/result", methods =['GET','POST'])
-def result():
-    if request.method =="POST":
-        num = request.form.get("number")
-        return render_template ('result.html', number_decimal=num, number_roman=input(int(num)), developer_name="Kamshat Maidan")
+@app.route('/', methods=['POST', 'GET'])
+def main_post():
+    if request.method == 'POST':
+        alpha = request.form['number']
+        if not alpha.isdecimal():
+            return render_template('index.html', developer_name='Kamshat', not_valid=True)
+        number = int(alpha)
+        if not 0 < number < 4000:
+            return render_template('index.html', developer_name='Kamshat', not_valid=True)
+        return render_template('result.html', number_decimal = number, number_roman= convert(number), developer_name='Kamshat')
     else:
-        return render_template("result.html", developer_name="Kamshat Maidan")
-
+        return render_template('index.html', developer_name='Kamshat', not_valid=False)
 
 if __name__ == '__main__':
     #app.run(debug=True)
     app.run(host='0.0.0.0', port=80)
-   
