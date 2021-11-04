@@ -31,21 +31,22 @@ Resources:
       UserData:
         Fn::Base64: |
           #! /bin/bash
-          
+      
           yum update -y 
           yum install python3 -y
           yum pip3 install flask -y 
           yum install git -y
           yum install httpd -y
-          FOLDER="https://raw.githubusercontent.com/MaidanKamshat/my-projects/main/Project-001-Roman-Numerals-Converter/"
+          FOLDER="https://raw.githubusercontent.com/MaidanKamshat/my-projects/main/Project-002-Roman-Numerals-Converter/"
           cd /var/www/html
           wget $FOLDER/templates/index.html
           wget $FOLDER/templates/result.html
           wget $FOLDER/app.py
+          systemctl start httpd
+          systemctl enable httpd
           python3 app.py
 
           
-
 Outputs:
   WebsiteURL:
     Value: !Sub
